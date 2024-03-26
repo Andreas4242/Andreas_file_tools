@@ -48,4 +48,4 @@ Requieres: jq and ChatGPT API access.
 For better result I suggest you run the clean_names.sh script in the folder first.
 # Be careful: 
 
-IT WILL REPLACE ALL "NON STANDARD" CHARS (üöä...8754..#%$§..) AND EMPTY SPACES WITH _
+IT WILL REPLACE ALL "NON STANDARD" CHARS (üöä...8754..#%$§..) AND EMPTY SPACES WITH this sign ---> _
