@@ -1,8 +1,4 @@
 # Andreas_file_tools
-# Summary:
-I'm organizing my large music collection stored in the cloud by renaming and reorganizing folders with similar names to avoid confusion, especially important when using devices or systems like Rockbox and FAT32, which can struggle with this. To simplify this, I used a Bash script to send folder names to ChatGPT, which suggests better, non-conflicting names. Then, the script automatically sorts the files into the corrected folders. The process requires a couple of runs but significantly tidies up the folder structure, making it easier to navigate and manage my music.
-
-# Long Version:
 
 In my pursuit to retrieve my music from the cloud, I find myself once again at a juncture where I need to work with folders and file names. 
 In doing so, I've rediscovered the issue of having similar folder and file names. 
