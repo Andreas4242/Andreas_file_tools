@@ -38,3 +38,8 @@ It is not foolproof, so be careful with your data. Make a dry run first. Anyway,
 Requieres: jq and ChatGPT API access.
 
 ### WARNING: USE ON TEST DATA ONLY.
+
+# how to use it:
+1. copy the bash script into a folder with the folders you want to organize
+2. add your ChatGPT API Key into script
+3. run the script
