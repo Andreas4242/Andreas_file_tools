@@ -25,20 +25,33 @@
 # Replace this with your actual OpenAI API key
 OPENAI_API_KEY="ENTR YOUR GPT-API-KEY HERE"
 
+# Store the names of directories in an array, removing the trailing slashes
 dirs=($(ls -d */ | sed 's#/##'))
 
-# Function to split directories into batches of 1000
+# Declare batches as a global array
+declare -a batches
+
+# Function to split directories into batches of 3000
 split_dirs() {
     local idx=0
     for dir in "${dirs[@]}"; do
-        let batch_idx=idx/1000
-        batches[batch_idx]+="$dir\n"
-        let idx+=1
+        # Calculate batch index
+        local batch_idx=$((idx / 3000))
+        # Append directory to the corresponding batch, ensuring global scope is used
+        batches[batch_idx]+="${dir}\n"
+        # Increment index
+        ((idx++))
     done
 }
 
 # Split directories into batches
 split_dirs
+
+# Now, batches are global and can be accessed anywhere after this point
+# For example, to display the content of batches
+# for batch in "${batches[@]}"; do
+#   echo -e "Batch: $batch"
+# done
 
 # Process each batch
 for batch in "${batches[@]}"; do
@@ -65,10 +78,12 @@ for batch in "${batches[@]}"; do
       -H "Authorization: Bearer $OPENAI_API_KEY" \
       -d "$JSON_PAYLOAD" | jq -r '.choices[0].message.content')
 
-    echo "$CORRECTED_TEXT"
+ 
 
  # First, extract the JSON part
 JSON_PART=$(echo "$CORRECTED_TEXT" | sed -n '/^```json$/,/^```$/p' | sed '1d;$d')
+
+echo  "$JSON_PART"
 
 # Process the JSON part with jq and the rest of the script
 echo "$JSON_PART" | jq -c '.[][]' | while read i; do
