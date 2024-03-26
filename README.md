@@ -5,7 +5,7 @@ In doing so, I've rediscovered the issue of having similar folder and file names
 If you have a large music collection, you sometimes encounter similar folders and names, which can lead to a huge mess, especially if you try to use Rockbox and other devices that utilize flash cards and the FAT32 systems.
 My goal was to reduce this mess. 
 
-So, here is an example of how i tryed to solve this problem:
+So, here is an example of how i tried to solve this problem:
 
 Let's say you encounter the following folder structure:
 
