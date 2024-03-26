@@ -31,7 +31,9 @@ After the second run it finaly got them all:
 ![second_run](https://github.com/andreas-ullrich/Andreas_file_tools/assets/68023686/5598c7fc-8d7c-4644-9e7c-09beebd30726)
 
 So, as you can see, it identified almost all the duplicates and consolidated their folders. 
-It is not foolproof, so be careful with your data. Make a dry run first. Anyway, I hope it will help you out.
+It is not foolproof, so be careful with your data. 
+
+Make a dry run first. Anyway, I hope it will help you out.
 
 Requieres: jq and ChatGPT API access.
 
