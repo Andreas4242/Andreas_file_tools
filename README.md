@@ -21,13 +21,13 @@ Since I'm lazy and wanted to try GPT-4, I decided to outsource the task of organ
 So, I wrote a Bash script that would send the folder structure to ChatGPT, and ChatGPT would suggest the correct folder names. 
 Then, the script would move the files into the right folders.
 
-After dirst run it will look like this:
+After the first run it will look like this:
 
 
 ![first_run](https://github.com/andreas-ullrich/Andreas_file_tools/assets/68023686/64976e42-5402-4591-aab6-ab614b8a4e7a)
 ![first_run_srtructure](https://github.com/andreas-ullrich/Andreas_file_tools/assets/68023686/990d001d-9929-4ad5-b0db-806e9911f164)
 
-After second run it finaly got them all:
+After the second run it finaly got them all:
 
 ![second_run_srtructure](https://github.com/andreas-ullrich/Andreas_file_tools/assets/68023686/51e1d52e-3e11-4ee7-ba7d-fcda9462a734)
 ![second_run](https://github.com/andreas-ullrich/Andreas_file_tools/assets/68023686/5598c7fc-8d7c-4644-9e7c-09beebd30726)
@@ -36,3 +36,5 @@ So, as you can see, it identified almost all the duplicates and consolidated the
 It is not foolproof, so be careful with your data. Make a dry run first. Anyway, I hope it will help you out.
 
 Requieres: jq and ChatGPT API access.
+
+### WARNING: USE ON TEST DATA ONLY.
