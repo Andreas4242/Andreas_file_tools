@@ -48,3 +48,10 @@ Requieres: jq and ChatGPT API access.
 For better result I suggest you run the clean_names.sh script in the folder first.
 But be careful: IT WILL REPLACE ALL "NON STANDARD" CHARS (üöä...8754..#%$§..) AND EMPTY SPACES WITH this sign ---> _
 I dont care about that, but maybe you care.
+
+
+# export_apple_playlist.sh
+
+It’s a fun little bash script. You feed it an Apple playlist, and it exports artists and albums, creating an HTML webpage with Google search links prioritized to Bandcamp. 
+This way, by clicking on the links in the resulting HTML, you can go directly to the artists’ Bandcamp sites and buy the albums from your playlists, thus removing yourself from the cloud further. 
+You have to export the Apple playlist and use it as a command line parameter with this script. I did it because the Apple Music buying experience sucks.
