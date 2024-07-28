@@ -110,7 +110,7 @@ local generic_keys = {
     'boundary',
     'brand',
     'brand:wikidata',
-    'brand:wikipedia'
+    'brand:wikipedia',
     'bridge',
     'building',
     'capital',
@@ -228,7 +228,7 @@ local point_columns = {
     'bicycle',
     'brand',
     'brand:wikidata',
-    'brand:wikipedia'
+    'brand:wikipedia',
     'bridge',
     'boundary',
     'building',
