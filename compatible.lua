@@ -669,7 +669,8 @@ function osm2pgsql.process_relation(object)
     if clean_tags(object.tags) then
         return
     end
-if object.tags.type == 'restriction' then
+
+    if object.tags.type == 'restriction' then
         local from_way = nil
         local via_node = nil
         local via_way = nil
@@ -705,6 +706,7 @@ if object.tags.type == 'restriction' then
         })
         return
     end
+
     local rtype = object:grab_tag('type')
     if (rtype ~= 'route') and (rtype ~= 'multipolygon') and (rtype ~= 'boundary') then
         return
@@ -811,4 +813,5 @@ if object.tags.type == 'restriction' then
         end
     end
 end
+
 
