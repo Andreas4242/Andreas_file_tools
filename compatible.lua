@@ -394,18 +394,6 @@ turn_restrictions = osm2pgsql.define_relation_table('turn_restrictions', {
     { column = 'tags', type = 'jsonb' },
 })
 
-turn_restrictions = osm2pgsql.define_relation_table('turn_restrictions', {
-    { column = 'relation_id', type = 'bigint', create_only = true },
-    { column = 'restriction', type = 'text' },
-    { column = 'from_way', type = 'text' },
-    { column = 'via_node', type = 'text' },
-    { column = 'to_way', type = 'text' },
-    { column = 'via_way', type = 'text' },
-    { column = 'via_relation', type = 'text' },
-    { column = 'members', type = 'jsonb' },
-    { column = 'tags', type = 'jsonb' },
-})
-
 local z_order_lookup = {
     proposed = {1, false},
     construction = {2, false},
