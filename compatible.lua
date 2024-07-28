@@ -383,7 +383,8 @@ tables.roads = osm2pgsql.define_table{
 }
 
 turn_restrictions = osm2pgsql.define_relation_table('turn_restrictions', {
-    { column = 'restriction', type = 'text' }, 
+    { column = 'relation_id', type = 'bigint', create_only = true },
+    { column = 'restriction', type = 'text' },
     { column = 'from_way', type = 'text' },
     { column = 'via_node', type = 'text' },
     { column = 'to_way', type = 'text' },
@@ -392,6 +393,43 @@ turn_restrictions = osm2pgsql.define_relation_table('turn_restrictions', {
     { column = 'members', type = 'jsonb' },
     { column = 'tags', type = 'jsonb' },
 })
+function osm2pgsql.process_relation(object)
+    if object.tags.type == 'restriction' then
+        local from_way = nil
+        local via_node = nil
+        local via_way = nil
+        local to_way = nil
+        local via_relation = nil
+
+        for _, member in ipairs(object.members) do
+            if member.role == 'from' then
+                from_way = member.ref
+            elseif member.role == 'via' then
+                if member.type == 'n' then
+                    via_node = member.ref
+                elseif member.type == 'w' then
+                    via_way = member.ref
+                elseif member.type == 'r' then
+                    via_relation = member.ref
+                end
+            elseif member.role == 'to' then
+                to_way = member.ref
+            end
+        end
+
+        turn_restrictions:insert({
+            relation_id = object.id,
+            restriction = object.tags.restriction,
+            from_way = from_way,
+            via_node = via_node,
+            via_way = via_way,
+            to_way = to_way,
+            via_relation = via_relation,
+            members = object.members,
+            tags = object.tags
+        })
+    end
+end
 
 local z_order_lookup = {
     proposed = {1, false},
@@ -423,41 +461,6 @@ local z_order_lookup = {
     motorway = {39, true}
 }
 
-function osm2pgsql.process_relation(object)
-	 if object.tags.type == 'restriction' then
-		 local from_way = nil
-		 local via_node = nil
-		 local via_way = nil
-		 local to_way = nil
-		 local via_relation = nil
-
-		 for _, member in ipairs(object.members) do
-			 if member.role == 'from' then
-				 from_way = member.ref
-			 elseif member.role == 'via' then
-				 if member.type == 'n' then
-					 via_node = member.ref
-				 elseif member.type == 'w' then
-					 via_way = member.ref
-				 elseif member.type == 'r' then
-					 via_relation = member.ref
-				 end
-			 elseif member.role == 'to' then
-				 to_way = member.ref
-			 end
-		 end
-		 turn_restrictions:insert({
-			 restriction = object.tags.restriction,
-			 from_way = from_way,
-			 via_node = via_node,
-			 via_way = via_way,
-			 to_way = to_way,
-			 via_relation = via_relation,
-			 members = object.members,
-			 tags = object.tags
-		 })
-	 end
-end
 
 local function as_bool(value)
     return value == 'yes' or value == 'true' or value == '1'
