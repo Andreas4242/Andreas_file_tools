@@ -393,9 +393,11 @@ turn_restrictions = osm2pgsql.define_table{
         { column = 'via_way', type = 'bigint', null = true },
         { column = 'via_relation', type = 'bigint', null = true },
         { column = 'members', type = 'jsonb' },
-        { column = 'tags', type = 'jsonb' },
+        { column = 'tags', type = 'jsonb' }
     }
 }
+
+
 
 local z_order_lookup = {
     proposed = {1, false},
