@@ -250,7 +250,7 @@ local point_columns = {
     'fuel:diesel',
     'fuel:e10',
     'fuel:octane_95',
-    'fuel:octane_98'
+    'fuel:octane_98',
     'generator:source',
     'harbour',
     'highway',
