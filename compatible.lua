@@ -752,7 +752,7 @@ function osm2pgsql.process_relation(object)
         return
     end
 
-       if object.tags.type == 'restriction' then
+      if object.tags.type == 'restriction' then
         local restriction = {
             restriction = object.tags.restriction or 'no_turn',
             from_way = -1,
@@ -789,6 +789,9 @@ function osm2pgsql.process_relation(object)
                 end
             end
         end
+
+        -- Debugging: Print the restriction data before inserting
+        print("Restriction Data: ", restriction)
 
         turn_restrictions:insert(restriction)
     end
