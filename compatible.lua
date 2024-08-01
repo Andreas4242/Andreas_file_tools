@@ -747,6 +747,16 @@ function osm2pgsql.process_way(object)
     end
 end
 
+-- Function to convert table to string for printing
+function table_to_string(tbl)
+    local result = {}
+    for k, v in pairs(tbl) do
+        table.insert(result, k .. ": " .. tostring(v))
+    end
+    return "{" .. table.concat(result, ", ") .. "}"
+end
+
+
 function osm2pgsql.process_relation(object)
     if clean_tags(object.tags) then
         return
@@ -791,7 +801,7 @@ function osm2pgsql.process_relation(object)
         end
 
         -- Debugging: Print the restriction data before inserting
-        print("Restriction Data: ", restriction)
+        print("Restriction Data: ", table_to_string(restriction))
 
         turn_restrictions:insert(restriction)
     end
