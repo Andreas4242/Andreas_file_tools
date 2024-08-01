@@ -463,8 +463,10 @@ turn_restrictions = osm2pgsql.define_table{
     columns = {
         { column = 'restriction', type = 'text' },
         { column = 'from_way', type = 'bigint' },
+        { column = 'from_node', type = 'bigint', null = true },  -- Added
         { column = 'via_node', type = 'bigint', null = true },
         { column = 'to_way', type = 'bigint' },
+        { column = 'to_node', type = 'bigint', null = true },  -- Added
         { column = 'via_way', type = 'bigint', null = true },
         { column = 'via_relation', type = 'bigint', null = true },
         { column = 'members', type = 'jsonb' },
@@ -750,12 +752,14 @@ function osm2pgsql.process_relation(object)
         return
     end
 
-     if object.tags.type == 'restriction' then
+       if object.tags.type == 'restriction' then
         local restriction = {
             restriction = object.tags.restriction or 'no_turn',
             from_way = -1,
+            from_node = nil,  -- Added
             via_node = nil,
             to_way = -1,
+            to_node = nil,  -- Added
             via_way = nil,
             via_relation = nil,
             members = object.members,
@@ -763,10 +767,18 @@ function osm2pgsql.process_relation(object)
         }
 
         for _, member in ipairs(object.members) do
-            if member.role == 'from' and member.type == 'w' then
-                restriction.from_way = member.ref
-            elseif member.role == 'to' and member.type == 'w' then
-                restriction.to_way = member.ref
+            if member.role == 'from' then
+                if member.type == 'w' then
+                    restriction.from_way = member.ref
+                elseif member.type == 'n' then  -- Added
+                    restriction.from_node = member.ref  -- Added
+                end
+            elseif member.role == 'to' then
+                if member.type == 'w' then
+                    restriction.to_way = member.ref
+                elseif member.type == 'n' then  -- Added
+                    restriction.to_node = member.ref  -- Added
+                end
             elseif member.role == 'via' then
                 if member.type == 'n' then
                     restriction.via_node = member.ref
