@@ -782,7 +782,7 @@ function osm2pgsql.process_relation(object)
         end
 
         -- Debugging: Print the restriction data before inserting
-        print("Restriction Data: ", table_to_string(restriction))
+        -- print("Restriction Data: ", table_to_string(restriction))
 
         turn_restrictions:insert(restriction)
     end
