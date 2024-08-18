@@ -465,12 +465,13 @@ turn_restrictions = osm2pgsql.define_table{
         { column = 'from_way', type = 'bigint' },
         { column = 'via_node', type = 'bigint', null = true },
         { column = 'to_way', type = 'bigint' },
+        { column = 'from_geom', type = 'geometry', projection = 4326, not_null = false },
+        { column = 'to_geom', type = 'geometry', projection = 4326, not_null = false },
+        { column = 'via_geom', type = 'geometry', projection = 4326, not_null = false },
         { column = 'members', type = 'jsonb' },
         { column = 'tags', type = 'jsonb' }
     }
 }
-
-
 
 local z_order_lookup = {
     proposed = {1, false},
@@ -767,6 +768,9 @@ function osm2pgsql.process_relation(object)
             from_way = -1,
             via_node = nil,
             to_way = -1,
+            from_geom = nil,
+            to_geom = nil,
+            via_geom = nil,
             members = object.members,
             tags = object.tags
         }
@@ -774,16 +778,17 @@ function osm2pgsql.process_relation(object)
         for _, member in ipairs(object.members) do
             if member.role == 'from' and member.type == 'w' then
                 restriction.from_way = member.ref
+                restriction.from_geom = osm2pgsql.way_tables[prefix .. 'line'][member.ref]  -- Fetch geometry for 'from' way
             elseif member.role == 'to' and member.type == 'w' then
                 restriction.to_way = member.ref
+                restriction.to_geom = osm2pgsql.way_tables[prefix .. 'line'][member.ref]  -- Fetch geometry for 'to' way
             elseif member.role == 'via' and member.type == 'n' then
                 restriction.via_node = member.ref
+                restriction.via_geom = osm2pgsql.point_tables[prefix .. 'point'][member.ref]  -- Fetch geometry for 'via' node
             end
         end
 
-        -- Debugging: Print the restriction data before inserting
-        -- print("Restriction Data: ", table_to_string(restriction))
-
+        -- Insert the restriction data into the turn_restrictions table
         turn_restrictions:insert(restriction)
     end
 
