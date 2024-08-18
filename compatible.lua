@@ -457,7 +457,6 @@ tables.roads = osm2pgsql.define_table{
     columns = gen_columns(non_point_columns, hstore or hstore_all, true, 'linestring')
 }
 
--- Define the turn_restrictions table with additional geometry columns
 turn_restrictions = osm2pgsql.define_table{
     name = prefix .. 'turn_restrictions',
     ids = { type = 'relation', id_column = 'relation_id' },
@@ -466,14 +465,10 @@ turn_restrictions = osm2pgsql.define_table{
         { column = 'from_way', type = 'bigint' },
         { column = 'via_node', type = 'bigint', null = true },
         { column = 'to_way', type = 'bigint' },
-        { column = 'from_geom', type = 'geometry', projection = 4326, not_null = false },
-        { column = 'to_geom', type = 'geometry', projection = 4326, not_null = false },
-        { column = 'via_geom', type = 'geometry', projection = 4326, not_null = false },
         { column = 'members', type = 'jsonb' },
         { column = 'tags', type = 'jsonb' }
     }
 }
-
 
 local z_order_lookup = {
     proposed = {1, false},
@@ -769,9 +764,6 @@ function osm2pgsql.process_relation(object)
             from_way = -1,
             via_node = nil,
             to_way = -1,
-            from_geom = nil,
-            to_geom = nil,
-            via_geom = nil,
             members = object.members,
             tags = object.tags
         }
@@ -779,27 +771,13 @@ function osm2pgsql.process_relation(object)
         for _, member in ipairs(object.members) do
             if member.role == 'from' and member.type == 'w' then
                 restriction.from_way = member.ref
-                if tables.roads then
-                    restriction.from_geom = tables.roads:fetch_geometry(member.ref)
-                elseif tables.line then
-                    restriction.from_geom = tables.line:fetch_geometry(member.ref)
-                end
             elseif member.role == 'to' and member.type == 'w' then
                 restriction.to_way = member.ref
-                if tables.roads then
-                    restriction.to_geom = tables.roads:fetch_geometry(member.ref)
-                elseif tables.line then
-                    restriction.to_geom = tables.line:fetch_geometry(member.ref)
-                end
             elseif member.role == 'via' and member.type == 'n' then
                 restriction.via_node = member.ref
-                if tables.point then
-                    restriction.via_geom = tables.point:fetch_geometry(member.ref)
-                end
             end
         end
 
-        -- Insert the restriction data into the turn_restrictions table
         turn_restrictions:insert(restriction)
     end
 
