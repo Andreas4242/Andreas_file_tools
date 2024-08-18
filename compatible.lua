@@ -457,6 +457,7 @@ tables.roads = osm2pgsql.define_table{
     columns = gen_columns(non_point_columns, hstore or hstore_all, true, 'linestring')
 }
 
+-- Define the turn_restrictions table with additional geometry columns
 turn_restrictions = osm2pgsql.define_table{
     name = prefix .. 'turn_restrictions',
     ids = { type = 'relation', id_column = 'relation_id' },
@@ -472,6 +473,7 @@ turn_restrictions = osm2pgsql.define_table{
         { column = 'tags', type = 'jsonb' }
     }
 }
+
 
 local z_order_lookup = {
     proposed = {1, false},
@@ -756,13 +758,12 @@ function table_to_string(tbl)
     return "{" .. table.concat(result, ", ") .. "}"
 end
 
-
 function osm2pgsql.process_relation(object)
     if clean_tags(object.tags) then
         return
     end
 
-     if object.tags.type == 'restriction' then
+    if object.tags.type == 'restriction' then
         local restriction = {
             restriction = object.tags.restriction or 'no_turn',
             from_way = -1,
@@ -778,13 +779,23 @@ function osm2pgsql.process_relation(object)
         for _, member in ipairs(object.members) do
             if member.role == 'from' and member.type == 'w' then
                 restriction.from_way = member.ref
-                restriction.from_geom = osm2pgsql.way_tables[prefix .. 'line'][member.ref]  -- Fetch geometry for 'from' way
+                if tables.roads then
+                    restriction.from_geom = tables.roads:fetch_geometry(member.ref)
+                elseif tables.line then
+                    restriction.from_geom = tables.line:fetch_geometry(member.ref)
+                end
             elseif member.role == 'to' and member.type == 'w' then
                 restriction.to_way = member.ref
-                restriction.to_geom = osm2pgsql.way_tables[prefix .. 'line'][member.ref]  -- Fetch geometry for 'to' way
+                if tables.roads then
+                    restriction.to_geom = tables.roads:fetch_geometry(member.ref)
+                elseif tables.line then
+                    restriction.to_geom = tables.line:fetch_geometry(member.ref)
+                end
             elseif member.role == 'via' and member.type == 'n' then
                 restriction.via_node = member.ref
-                restriction.via_geom = osm2pgsql.point_tables[prefix .. 'point'][member.ref]  -- Fetch geometry for 'via' node
+                if tables.point then
+                    restriction.via_geom = tables.point:fetch_geometry(member.ref)
+                end
             end
         end
 
